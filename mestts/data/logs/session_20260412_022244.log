@@ -1,0 +1,94 @@
+2026-04-12 02:22:44,866 [MainThread] run_session INFO - Starting session for participant p18
+2026-04-12 02:22:45,266 [MainThread] run_session INFO - Vosk model loaded from model/
+2026-04-12 02:22:45,266 [AudioProc] run_session INFO - Audio input device: Microphone Array (2- Realtek(R) (sr=44100.0)
+2026-04-12 02:22:45,286 [MainThread] persistence.db_manager INFO - DatabaseManager: connected to data\sessions.db.
+2026-04-12 02:22:45,288 [SessionLogger] persistence.session_logger INFO - SessionLogger worker started.
+2026-04-12 02:22:45,349 [AudioProc] run_session INFO - Audio stream active.
+2026-04-12 02:22:59,585 [MainThread] run_session INFO - Calibration raw: left=0.2823 center=0.2145 right=0.1509
+2026-04-12 02:22:59,588 [MainThread] run_session INFO - Calibration OK — span=0.1314 quality=58.4%
+2026-04-12 02:23:02,071 [MainThread] run_session INFO - Session 41130f30-2e7a-4a3a-8f03-b76bb0509c79 started. Epoch: 54371687000000
+2026-04-12 02:23:02,071 [MainThread] persistence.session_logger INFO - SessionLogger: session 41130f30-2e7a-4a3a-8f03-b76bb0509c79 opened.
+2026-04-12 02:23:02,101 [MainThread] run_session INFO - Sentence 1/3: 'The cat sat on the mat'
+2026-04-12 02:23:02,349 [MainThread] run_session INFO - Fixation: [2] 'sat' duration=0.151s
+2026-04-12 02:23:03,086 [MainThread] run_session INFO - Regression: [1] 'cat' ← was at [1], duration=0.151s
+2026-04-12 02:23:03,581 [MainThread] run_session INFO - Fixation: [3] 'on' duration=0.152s
+2026-04-12 02:23:03,825 [AudioProc] run_session INFO - Vosk partial: 'the'
+2026-04-12 02:23:03,825 [AudioProc] run_session INFO - Speech matched: 'The' (via 'the' ratio=1.00) @ 1775940783.725s
+2026-04-12 02:23:03,882 [MainThread] run_session INFO - Fixation: [4] 'the' duration=0.156s
+2026-04-12 02:23:04,151 [AudioProc] run_session INFO - Vosk partial: 'the care'
+2026-04-12 02:23:04,281 [MainThread] run_session INFO - Fixation: [5] 'mat' duration=0.204s
+2026-04-12 02:23:04,338 [AudioProc] run_session INFO - Vosk partial: 'the cat sat on'
+2026-04-12 02:23:04,338 [AudioProc] run_session INFO - Speech matched: 'cat' (via 'cat' ratio=1.00) @ 1775940784.239s
+2026-04-12 02:23:04,338 [AudioProc] run_session INFO - Speech matched: 'sat' (via 'sat' ratio=1.00) @ 1775940784.239s
+2026-04-12 02:23:04,338 [AudioProc] run_session INFO - Speech matched: 'on' (via 'on' ratio=1.00) @ 1775940784.239s
+2026-04-12 02:23:04,551 [AudioProc] run_session INFO - Vosk partial: 'the cat sat on the'
+2026-04-12 02:23:04,625 [MainThread] run_session INFO - Regression: [2] 'sat' ← was at [2], duration=0.158s
+2026-04-12 02:23:04,854 [AudioProc] run_session INFO - Vosk partial: 'the cat sat on the net'
+2026-04-12 02:23:04,893 [MainThread] run_session INFO - Fixation: [3] 'on' duration=0.188s
+2026-04-12 02:23:05,097 [AudioProc] run_session INFO - Vosk partial: 'the cat sat on the net'
+2026-04-12 02:23:05,315 [AudioProc] run_session INFO - Vosk partial: 'the cat sat on the net'
+2026-04-12 02:23:05,559 [AudioProc] run_session INFO - Vosk final: 'the cat sat on the net'
+2026-04-12 02:23:07,875 [MainThread] run_session INFO - Regression: [2] 'sat' ← was at [2], duration=0.160s
+2026-04-12 02:23:08,340 [MainThread] alignment.synchronizer INFO - Synchronizer flush: 6 slots, 5 complete.
+2026-04-12 02:23:08,353 [MainThread] run_session INFO - Sentence 2/3: 'She walked quickly to the store'
+2026-04-12 02:23:08,849 [MainThread] run_session INFO - Fixation: [1] 'walked' duration=0.202s
+2026-04-12 02:23:09,292 [MainThread] run_session INFO - Fixation: [2] 'quickly' duration=0.153s
+2026-04-12 02:23:09,516 [MainThread] run_session INFO - Fixation: [3] 'to' duration=0.156s
+2026-04-12 02:23:09,887 [MainThread] run_session INFO - Fixation: [4] 'the' duration=0.161s
+2026-04-12 02:23:09,948 [AudioProc] run_session INFO - Vosk partial: 'see'
+2026-04-12 02:23:10,115 [MainThread] run_session INFO - Fixation: [5] 'store' duration=0.170s
+2026-04-12 02:23:10,286 [AudioProc] run_session INFO - Vosk partial: 'see you have'
+2026-04-12 02:23:10,567 [MainThread] run_session INFO - Regression: [3] 'to' ← was at [3], duration=0.170s
+2026-04-12 02:23:10,575 [AudioProc] run_session INFO - Vosk partial: 'c o two'
+2026-04-12 02:23:10,846 [AudioProc] run_session INFO - Vosk partial: 'seal off the other those'
+2026-04-12 02:23:10,846 [AudioProc] run_session INFO - Speech matched: 'the' (via 'the' ratio=1.00) @ 1775940790.747s
+2026-04-12 02:23:10,883 [MainThread] run_session INFO - Regression: [2] 'quickly' ← was at [2], duration=0.196s
+2026-04-12 02:23:10,987 [AudioProc] run_session INFO - Vosk partial: 'seal off the other those good'
+2026-04-12 02:23:11,197 [AudioProc] run_session INFO - Vosk partial: 'seal off the other those good'
+2026-04-12 02:23:11,449 [AudioProc] run_session INFO - Vosk partial: 'seal off the other those good'
+2026-04-12 02:23:11,717 [AudioProc] run_session INFO - Vosk final: 'see off the other those good'
+2026-04-12 02:23:16,973 [MainThread] alignment.synchronizer INFO - Synchronizer flush: 6 slots, 5 complete.
+2026-04-12 02:23:16,982 [MainThread] run_session INFO - Sentence 3/3: 'The children played outside until the sun set'
+2026-04-12 02:23:17,162 [MainThread] run_session INFO - Fixation: [4] 'until' duration=0.168s
+2026-04-12 02:23:17,349 [MainThread] run_session INFO - Regression: [3] 'outside' ← was at [3], duration=0.151s
+2026-04-12 02:23:17,715 [MainThread] run_session INFO - Regression: [2] 'played' ← was at [2], duration=0.169s
+2026-04-12 02:23:18,114 [AudioProc] run_session INFO - Vosk partial: 'the'
+2026-04-12 02:23:18,114 [AudioProc] run_session INFO - Speech matched: 'The' (via 'the' ratio=1.00) @ 1775940798.014s
+2026-04-12 02:23:18,406 [AudioProc] run_session INFO - Vosk partial: 'the'
+2026-04-12 02:23:18,616 [MainThread] run_session INFO - Fixation: [5] 'the' duration=0.159s
+2026-04-12 02:23:18,628 [AudioProc] run_session INFO - Vosk partial: 'the children'
+2026-04-12 02:23:18,628 [AudioProc] run_session INFO - Speech matched: 'children' (via 'children' ratio=1.00) @ 1775940798.529s
+2026-04-12 02:23:18,995 [AudioProc] run_session INFO - Vosk partial: 'the children for'
+2026-04-12 02:23:19,188 [MainThread] run_session INFO - Fixation: [6] 'sun' duration=0.157s
+2026-04-12 02:23:19,219 [AudioProc] run_session INFO - Vosk partial: 'the children from outside'
+2026-04-12 02:23:19,220 [AudioProc] run_session INFO - Speech matched: 'outside' (via 'outside' ratio=1.00) @ 1775940799.120s
+2026-04-12 02:23:19,455 [AudioProc] run_session INFO - Vosk partial: 'the children for about'
+2026-04-12 02:23:19,455 [MainThread] run_session INFO - Fixation: [7] 'set' duration=0.188s
+2026-04-12 02:23:19,695 [AudioProc] run_session INFO - Vosk partial: 'the children get outside and in this'
+2026-04-12 02:23:19,927 [AudioProc] run_session INFO - Vosk partial: 'the children get outside and in this instance'
+2026-04-12 02:23:19,985 [MainThread] run_session INFO - Regression: [2] 'played' ← was at [2], duration=0.160s
+2026-04-12 02:23:20,165 [AudioProc] run_session INFO - Vosk partial: 'the children get outside and in this incident'
+2026-04-12 02:23:20,175 [MainThread] run_session INFO - Fixation: [3] 'outside' duration=0.166s
+2026-04-12 02:23:20,390 [MainThread] run_session INFO - Fixation: [4] 'until' duration=0.160s
+2026-04-12 02:23:20,423 [AudioProc] run_session INFO - Vosk partial: 'the children get outside and in the sunset'
+2026-04-12 02:23:20,659 [AudioProc] run_session INFO - Vosk partial: 'the children get outside and in the sunset'
+2026-04-12 02:23:20,921 [AudioProc] run_session INFO - Vosk partial: 'the children get outside and in the sunset'
+2026-04-12 02:23:21,185 [AudioProc] run_session INFO - Vosk final: 'the children get outside and in the said'
+2026-04-12 02:23:23,152 [MainThread] run_session INFO - Regression: [3] 'outside' ← was at [3], duration=0.157s
+2026-04-12 02:23:28,041 [MainThread] alignment.synchronizer INFO - Synchronizer flush: 8 slots, 6 complete.
+2026-04-12 02:23:28,041 [MainThread] analytics.feature_extractor INFO - FeatureExtractor: 3 scored sentences, 0 features missing.
+2026-04-12 02:23:28,041 [MainThread] analytics.risk_scorer INFO - Risk score: RS=0.4000 band=MODERATE completeness=0.81 n_missing=0
+2026-04-12 02:23:28,041 [MainThread] persistence.session_logger INFO - SessionLogger: full export written to data\exports\41130f30-2e7a-4a3a-8f03-b76bb0509c79_export.json.
+2026-04-12 02:23:28,052 [MainThread] persistence.export INFO - Exported session summary (21 rows) → data\exports\session_summary.csv.
+2026-04-12 02:23:28,070 [MainThread] persistence.export INFO - Exported word records (1447 rows) → data\exports\word_records.csv.
+2026-04-12 02:23:28,078 [MainThread] persistence.export INFO - Exported sentence records (159 rows) → data\exports\sentence_records.csv.
+2026-04-12 02:23:33,486 [AudioProc] run_session INFO - Vosk partial: 'in'
+2026-04-12 02:23:33,758 [AudioProc] run_session INFO - Vosk partial: 'in seem'
+2026-04-12 02:23:33,975 [AudioProc] run_session INFO - Vosk partial: 'in seem'
+2026-04-12 02:23:34,245 [AudioProc] run_session INFO - Vosk partial: 'in seem to'
+2026-04-12 02:23:34,495 [AudioProc] run_session INFO - Vosk partial: 'in seem to'
+2026-04-12 02:23:34,755 [AudioProc] run_session INFO - Vosk final: 'in seem to'
+2026-04-12 02:23:46,247 [TypingHook] modules.typing.hook INFO - TypingHook stopped.
+2026-04-12 02:23:46,247 [SessionLogger] persistence.session_logger INFO - SessionLogger worker stopped.
+2026-04-12 02:23:46,247 [Synchronizer] alignment.synchronizer INFO - SynchronizerThread stopped.
+2026-04-12 02:23:46,251 [MainThread] persistence.db_manager INFO - DatabaseManager: connection closed.

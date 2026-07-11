@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "description": "MESTTS stimulus sentence protocol. Sentences are ordered from practice to scored. Text is Flesch-Kincaid grade-appropriate for adult screening.",
+  "sentences": [
+    {
+      "id": "P001",
+      "type": "practice",
+      "text": "The cat sat on the mat",
+      "grade_level": 1.0,
+      "word_count": 6
+    },
+    {
+      "id": "P002",
+      "type": "practice",
+      "text": "She walked quickly to the store",
+      "grade_level": 2.5,
+      "word_count": 6
+    },
+    {
+      "id": "S001",
+      "type": "scored",
+      "text": "The children played outside until the sun set",
+      "grade_level": 3.2,
+      "word_count": 8
+    }
+  ]
+}

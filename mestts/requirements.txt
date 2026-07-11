@@ -1,0 +1,34 @@
+# MESTTS — Multimodal Eye–Speech–Typing Temporal Synchronization System
+# Python >= 3.9 required
+
+# ── Vision ──────────────────────────────────────────────────────────────────
+opencv-python>=4.8.0
+mediapipe>=0.10.0
+
+# ── Speech ──────────────────────────────────────────────────────────────────
+vosk>=0.3.45
+pyaudio>=0.2.14
+
+# ── Typing ──────────────────────────────────────────────────────────────────
+pynput>=1.7.6
+
+# ── NLP / Fuzzy Matching ────────────────────────────────────────────────────
+rapidfuzz>=3.5.0
+python-Levenshtein>=0.23.0
+
+# ── Machine Learning / Calibration ──────────────────────────────────────────
+scikit-learn>=1.3.0
+numpy>=1.24.0
+
+# ── Data ────────────────────────────────────────────────────────────────────
+pandas>=2.0.0
+
+# ── Configuration ───────────────────────────────────────────────────────────
+PyYAML>=6.0
+
+# ── Display (choose one; tkinter is stdlib on most platforms) ───────────────
+# pygame>=2.5.0  # Alternative to tkinter; uncomment if preferred
+
+# ── Testing ─────────────────────────────────────────────────────────────────
+pytest>=7.4.0
+pytest-cov>=4.1.0

@@ -1,0 +1,94 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# MESTTS Experiment Configuration
+# Multimodal Eye–Speech–Typing Temporal Synchronization System
+# Version 1.0
+#
+# IMPORTANT: All scoring thresholds are provisional engineering placeholders.
+# They must be validated against normative population data before use
+# in any research publication or operational deployment.
+# ─────────────────────────────────────────────────────────────────────────────
+
+protocol:
+  version: "1.0"
+  sentence_file: "config/sentence_protocol.json"
+
+# ── Vision / Gaze ──────────────────────────────────────────────────────────
+vision:
+  # IPCam stream URL (DroidCam / IP Webcam via RTSP or HTTP MJPEG)
+  ipcam_url: "http://192.168.0.130:8080/video"
+
+  target_fps: 30
+  camera_latency_ms: 50         # Pipeline latency correction (ms)
+
+  # MediaPipe FaceMesh iris indices
+  left_iris_indices:  [468, 469, 470, 471]
+  right_iris_indices: [473, 474, 475, 476]
+
+  # Fixation detection (I-DT algorithm)
+  fixation_buffer_frames: 3      # Min consecutive frames to confirm fixation
+  fixation_spatial_threshold_px: 40.0   # Max dispersion for fixation
+  fixation_window_ms: 100        # Minimum fixation duration
+
+  regression_delta_words: 1      # Min backward word steps = regression
+
+  max_dropped_frame_pct: 0.20   # Warn if dropped frames exceed this rate
+
+  # Calibration
+  calibration_points:            # Normalized [x, y] screen positions
+    - [0.1, 0.5]                 # Left
+    - [0.5, 0.5]                 # Center
+    - [0.9, 0.5]                 # Right
+  calibration_dwell_seconds: 2.0
+  calibration_n_samples: 30
+  calibration_rmse_warn_px: 50.0
+
+# ── Speech / ASR ───────────────────────────────────────────────────────────
+speech:
+  vosk_model_path: "model/"
+  sample_rate: 16000             # Hz
+  chunk_size: 4096               # PyAudio frames per chunk (~256ms)
+
+  # Fuzzy word alignment
+  fuzzy_threshold: 75.0          # Minimum RapidFuzz ratio (0–100)
+  lookahead_window: 3            # Words ahead of current position to consider
+
+# ── Sentence Flow ──────────────────────────────────────────────────────────
+sentence_flow:
+  practice_sentences: 0          # First N sentences excluded from scoring
+  timeout_s: 60.0                # Auto-advance if sentence stalls
+  min_sentences_for_validity: 1  # Minimum scored sentences for valid session
+
+# ── Risk Scoring ───────────────────────────────────────────────────────────
+# Thresholds are engineering placeholders from reading-fluency literature.
+# Weights sum to 1.00.
+scoring:
+  thresholds:
+    F01_evs_speech_std_ms:        120.0   # ms — high EVS variability
+    F04_speech_inversion_rate:    0.25    # proportion — voice leads eye
+    F06_mean_fixation_duration_ms: 300.0  # ms — prolonged fixations
+    F08_regression_rate:          0.20    # regressions per word
+    F12_mean_correction_rate:     0.30    # backspaces per word
+    F14_stg_std_ms:               200.0   # ms — unstable cross-modal timing
+    F16_gaze_speech_corr:         0.30    # correlation threshold (below = risk)
+
+  weights:
+    F01: 0.20    # EVS speech variability
+    F04: 0.15    # Speech inversion rate
+    F06: 0.15    # Mean fixation duration
+    F08: 0.15    # Regression rate
+    F12: 0.15    # Correction rate
+    F14: 0.10    # STG variability
+    F16: 0.10    # Gaze-speech correlation
+
+  risk_bands:
+    low_max:               0.20
+    moderate_max:          0.45
+    high_max:              0.70
+    min_data_completeness: 0.60   # Below this → INCONCLUSIVE
+
+# ── Persistence ────────────────────────────────────────────────────────────
+persistence:
+  db_path:    "data/sessions.db"
+  export_dir: "data/exports"
+  log_dir:    "data/logs"
+  log_level:  "INFO"

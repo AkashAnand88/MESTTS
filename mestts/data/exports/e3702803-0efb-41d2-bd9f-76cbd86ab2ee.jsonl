@@ -1,0 +1,5 @@
+{"event_type": "SESSION_START", "session_id": "e3702803-0efb-41d2-bd9f-76cbd86ab2ee", "ts": 1775939999.4634533}
+{"event_type": "SENTENCE_CLOSE", "sentence_index": 0, "ts": 7.281, "completeness": 0.8333333333333334, "regression_rate": 0.0}
+{"event_type": "SENTENCE_CLOSE", "sentence_index": 1, "ts": 17.031, "completeness": 0.8333333333333334, "regression_rate": 0.3333333333333333}
+{"event_type": "SENTENCE_CLOSE", "sentence_index": 2, "ts": 30.25, "completeness": 0.625, "regression_rate": 0.0}
+{"event_type": "SESSION_CLOSE", "ts": 30.25, "risk_score": 0.4, "risk_band": "MODERATE"}
