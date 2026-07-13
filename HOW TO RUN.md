@@ -80,9 +80,16 @@ pipwin install pyaudio
 
 ## Step 4 — Install Python Dependencies
 
+First, install the core MESTTS application dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+
+If you plan to run the Web Frontend (Server Mode), also install the API dependencies:
+```bash
+pip install -r api/requirements.txt
+```
+
 
 If `python-Levenshtein` fails to build (it needs a C compiler):
 ```bash
@@ -357,3 +364,37 @@ degrades gracefully and continues with the remaining two modalities.
 > It does not constitute a clinical diagnosis of dyslexia or any other condition.
 > All results must be interpreted by a qualified specialist within a
 > comprehensive assessment context.
+
+---
+
+## Running with the Web Frontend (Server Mode)
+
+Instead of manually running `run_session.py` from the command line, you can launch MESTTS in **Server Mode** and control everything from a beautiful web interface! 
+
+The system now includes a FastAPI server that acts as a remote control for the native Python desktop app. This is the **recommended** way to run the project if you want a user-friendly launcher.
+
+### How to start it:
+
+1. **Start the FastAPI Server:**
+   Open a terminal in the `mestts/api` directory and run:
+   ```bash
+   cd mestts/api
+   python -m uvicorn main:app --reload
+   ```
+   This will start the backend controller at `http://127.0.0.1:8000`. Leave this terminal open.
+
+2. **Start the Web Frontend:**
+   Open a second terminal in your `FrontEnd_Dyslexia_Detection` folder and run:
+   ```bash
+   npm install   # (only needed the first time)
+   npm run dev
+   ```
+
+3. **Launch an Assessment:**
+   Open your browser to the URL provided by the frontend (usually `http://localhost:5173`). 
+   When you click the **Start Session** button in the web app, the backend server will **automatically** launch `run_session.py` for you! The Python desktop window will pop up just as before. 
+
+4. **View Results:**
+   Once the participant finishes reading the sentences and the Python window closes, the web frontend will automatically detect that the session finished and pull the final JSON results directly into the browser for you to view!
+
+> **TL;DR:** You do **not** need to manually run `python scripts/run_session.py` anymore. Just run the FastAPI server, run the frontend, and let the web UI do the work for you!
