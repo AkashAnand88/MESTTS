@@ -110,3 +110,9 @@ async def latest_result():
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error reading result: {str(e)}")
+
+# This block allows you to run the server directly via `python main.py` 
+# instead of having to use the `uvicorn main:app` command!
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
