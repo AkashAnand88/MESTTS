@@ -28,6 +28,12 @@ DB_PATH = ROOT_DIR / "data" / "sessions.db"
 EXPORTS_DIR = ROOT_DIR / "data" / "exports"
 
 
+@app.get("/health")
+async def health():
+    """Lightweight liveness check used by the frontend's isApiOnline badge."""
+    return {"status": "ok"}
+
+
 @app.post("/launch-assessment")
 async def launch_assessment(participant_id: str = Query(...)):
     """Launches the PyQT5 session GUI as a background process."""
