@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse, io, json, logging, os, queue, sys, threading, time, uuid, warnings
 from collections import deque
+from datetime import datetime, timezone
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
@@ -1722,6 +1723,25 @@ class ResultsDashboard(QWidget):
 # UI structure mirrors ReadingScreen from main_camera_word.py.
 # Sentence cycling + MESTTS persistence wired on top.
 # ══════════════════════════════════════════════════════════════════════════════
+def _avg_indicator(risk_result, prefixes: Tuple[str, ...]) -> float:
+    """
+    Average the `contribution` of every RiskScoreResult indicator whose
+    feature_id starts with one of `prefixes`. Used to derive a rough
+    per-modality confidence score for the frontend export
+    (avg_eye_conf / avg_type_conf / avg_audio_conf).
+
+    NOTE: this is a stand-in, not a validated per-modality confidence
+    metric — RiskScorer only produces session-level indicator
+    contributions today, grouped here by feature family:
+      F06/F08 -> eye tracking, F01 -> typing, F04 -> speech/audio.
+    If you need a real per-modality score, that belongs in
+    analytics/risk_scorer.py, not here.
+    """
+    vals = [ind.contribution for ind in risk_result.indicators
+            if ind.feature_id.startswith(prefixes)]
+    return sum(vals) / len(vals) if vals else 0.0
+
+
 class SessionWindow(QWidget):
 
     CALIB_DURATION = GazeTracker.CALIB_DURATION
@@ -2234,7 +2254,33 @@ class SessionWindow(QWidget):
             risk_score = risk.risk_score,
             risk_band  = risk.risk_band,
             validity   = completeness >= 0.6,
-            full_export= {"session_id": self.session_id, "risk_band": risk.risk_band},
+            full_export= {
+                "session_id":     self.session_id,
+                "participant_id": self.participant_id,
+                "timestamp":      datetime.now(timezone.utc).isoformat(),
+                "risk_band":      risk.risk_band,
+                "avg_fusion_score": risk.risk_score,
+                "avg_eye_conf":   _avg_indicator(risk, ("F06", "F08")),
+                "avg_type_conf":  _avg_indicator(risk, ("F01",)),
+                "avg_audio_conf": _avg_indicator(risk, ("F04",)),
+                # Per-sentence eye/type/audio confidence and a per-sentence
+                # risk_label don't exist yet (RiskScorer only scores at
+                # session level) — final_score/risk_label below are
+                # placeholders (data_completeness / session risk_band)
+                # so the /results page doesn't crash on missing keys.
+                # Replace with real per-sentence scoring if the demo needs it.
+                "per_sentence": [
+                    {
+                        "sentence_index": m.sentence_index,
+                        "final_score":    m.data_completeness,
+                        "risk_label":     risk.risk_band,
+                        "eye_conf":       m.mean_fixation_duration_ms or 0.0,
+                        "type_conf":      m.mean_evs_typing_ms or 0.0,
+                        "audio_conf":     m.mean_evs_speech_ms or 0.0,
+                    }
+                    for m in self.sentence_metrics_list
+                ],
+            },
         )
         self.exporter.export_session_summary()
         self.exporter.export_word_records()
