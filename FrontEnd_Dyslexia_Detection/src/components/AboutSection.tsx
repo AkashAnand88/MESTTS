@@ -5,7 +5,7 @@ const values = [
     icon: GraduationCap,
     title: "Research-Backed",
     description:
-      "Our models are built on peer-reviewed research and validated methodologies in dyslexia detection.",
+      "Our models are built on peer-reviewed research and validated methodologies in MESTTS detection.",
   },
   {
     icon: Shield,
@@ -38,14 +38,14 @@ const AboutSection = () => {
               About This Project
             </h2>
             <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-              This dyslexia detection system is a final year project that
-              combines cutting-edge machine learning with a deep understanding
-              of learning differences. Our goal is to make early dyslexia
-              screening accessible and accurate.
+              This MESTTS detection system is a final year project that combines
+              cutting-edge machine learning with a deep understanding of
+              learning differences. Our goal is to make early MESTTS screening
+              accessible and accurate.
             </p>
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
               By analyzing typing patterns, eye movements, and audio input, we
-              can identify potential indicators of dyslexia that might otherwise
+              can identify potential indicators of MESTTS that might otherwise
               go unnoticed, enabling earlier intervention and better outcomes.
             </p>
 

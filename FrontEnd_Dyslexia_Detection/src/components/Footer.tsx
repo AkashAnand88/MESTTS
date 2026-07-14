@@ -22,21 +22,18 @@ const Footer = () => {
               className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
             >
               <Github className="w-4 h-4" />
-              <span className="text-sm">Dyslexia awareness for inclusive learning</span>
+              <span className="text-sm">
+                MESTTS awareness for inclusive learning
+              </span>
             </a>
             <a
               href="#"
               className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2"
-            >
-              
-              
-            </a>
+            ></a>
           </div>
 
           {/* Copyright */}
-          <p className="text-sm text-muted-foreground">
-            © Final Year Project.
-          </p>
+          <p className="text-sm text-muted-foreground">© Final Year Project.</p>
         </div>
       </div>
     </footer>

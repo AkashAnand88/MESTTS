@@ -7,7 +7,7 @@
 // MFCC/jitter/shimmer are NOT computed in JS — see Phase 3 notes on why.
 
 import { useCallback, useRef, useState } from "react";
-import { API_BASE } from "@/hooks/useDyslexiaAssessment";
+import { API_BASE } from "@/hooks/useMESTTSAssessment";
 
 export interface AudioData {
   mfcc_mean: number;
@@ -36,7 +36,8 @@ export type AudioCaptureErrorReason =
 
 export function useAudioCapture(referenceText: string) {
   const [status, setStatus] = useState<AudioCaptureStatus>("idle");
-  const [errorReason, setErrorReason] = useState<AudioCaptureErrorReason | null>(null);
+  const [errorReason, setErrorReason] =
+    useState<AudioCaptureErrorReason | null>(null);
   const [elapsedSec, setElapsedSec] = useState(0);
 
   const streamRef = useRef<MediaStream | null>(null);
@@ -59,7 +60,10 @@ export function useAudioCapture(referenceText: string) {
     chunksRef.current = [];
     setElapsedSec(0);
 
-    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+    if (
+      !navigator.mediaDevices?.getUserMedia ||
+      typeof MediaRecorder === "undefined"
+    ) {
       setStatus("error");
       setErrorReason("unsupported_browser");
       return;
@@ -72,7 +76,9 @@ export function useAudioCapture(referenceText: string) {
     } catch (err) {
       setStatus("error");
       const name = (err as DOMException)?.name;
-      setErrorReason(name === "NotFoundError" ? "no_microphone" : "permission_denied");
+      setErrorReason(
+        name === "NotFoundError" ? "no_microphone" : "permission_denied",
+      );
       return;
     }
     streamRef.current = stream;
@@ -97,7 +103,8 @@ export function useAudioCapture(referenceText: string) {
     if (!recorder || recorder.state === "inactive") return null;
 
     const blob: Blob = await new Promise((resolve) => {
-      recorder.onstop = () => resolve(new Blob(chunksRef.current, { type: recorder.mimeType }));
+      recorder.onstop = () =>
+        resolve(new Blob(chunksRef.current, { type: recorder.mimeType }));
       recorder.stop();
     });
     cleanupStream();
@@ -111,7 +118,11 @@ export function useAudioCapture(referenceText: string) {
     setStatus("uploading");
     try {
       const formData = new FormData();
-      const ext = blob.type.includes("ogg") ? "ogg" : blob.type.includes("wav") ? "wav" : "webm";
+      const ext = blob.type.includes("ogg")
+        ? "ogg"
+        : blob.type.includes("wav")
+          ? "wav"
+          : "webm";
       formData.append("file", blob, `recording.${ext}`);
       formData.append("reference_text", referenceText);
 

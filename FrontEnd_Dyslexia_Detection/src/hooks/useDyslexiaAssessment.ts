@@ -10,7 +10,7 @@ export interface AssessmentResult {
   timestamp: string;
 }
 
-interface UseDyslexiaAssessmentReturn {
+interface UseMESTTSAssessmentReturn {
   isApiOnline: boolean;
   isLoading: boolean;
   error: string | null;
@@ -21,7 +21,7 @@ interface UseDyslexiaAssessmentReturn {
 
 export const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
-export function useDyslexiaAssessment(): UseDyslexiaAssessmentReturn {
+export function useMESTTSAssessment(): UseMESTTSAssessmentReturn {
   const [isApiOnline, setIsApiOnline] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

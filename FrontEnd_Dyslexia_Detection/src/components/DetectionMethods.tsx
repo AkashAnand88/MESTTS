@@ -1,6 +1,12 @@
 import { Keyboard, Eye, Mic, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 const methods = [
@@ -8,7 +14,7 @@ const methods = [
     icon: Keyboard,
     title: "Keystroke Analysis",
     description:
-      "Our ML model analyzes typing patterns including speed, rhythm, and hesitations to identify potential dyslexia indicators.",
+      "Our ML model analyzes typing patterns including speed, rhythm, and hesitations to identify potential MESTTS indicators.",
     features: [
       "Typing speed measurement",
       "Pattern recognition",
@@ -50,21 +56,28 @@ const methods = [
 
 const DetectionMethods = () => {
   const scrollToAssessment = () => {
-    document.getElementById("assessment")?.scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("assessment")
+      ?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <section id="methods" className="py-24 bg-gradient-to-b from-background to-secondary/30">
+    <section
+      id="methods"
+      className="py-24 bg-gradient-to-b from-background to-secondary/30"
+    >
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <Badge variant="secondary" className="mb-4">Core Technology</Badge>
+          <Badge variant="secondary" className="mb-4">
+            Core Technology
+          </Badge>
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
             Three Powerful Detection Methods
           </h2>
           <p className="text-lg text-muted-foreground">
             Our comprehensive approach combines multiple ML models trained on
-            extensive datasets to provide accurate and reliable dyslexia
+            extensive datasets to provide accurate and reliable MESTTS
             screening.
           </p>
         </div>
@@ -78,9 +91,11 @@ const DetectionMethods = () => {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardHeader className="relative pb-0">
-                 {/* Decorative gradient blob */}
-                 <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none ${method.color === "accent" ? "bg-accent" : "bg-primary"}`} />
-                
+                {/* Decorative gradient blob */}
+                <div
+                  className={`absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl opacity-20 pointer-events-none ${method.color === "accent" ? "bg-accent" : "bg-primary"}`}
+                />
+
                 {/* Icon */}
                 <div
                   className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-sm ${
@@ -95,7 +110,9 @@ const DetectionMethods = () => {
                     }`}
                   />
                 </div>
-                <CardTitle className="font-serif text-2xl font-bold">{method.title}</CardTitle>
+                <CardTitle className="font-serif text-2xl font-bold">
+                  {method.title}
+                </CardTitle>
               </CardHeader>
 
               <CardContent className="pt-4">
@@ -112,14 +129,19 @@ const DetectionMethods = () => {
                           method.color === "accent" ? "bg-accent" : "bg-primary"
                         }`}
                       />
-                      <span className="text-muted-foreground font-medium">{feature}</span>
+                      <span className="text-muted-foreground font-medium">
+                        {feature}
+                      </span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
 
               <CardFooter className="pt-6 border-t border-border/50 flex items-center justify-between bg-muted/20">
-                <Badge variant="outline" className="font-mono text-xs text-muted-foreground border-primary/20 bg-background/50">
+                <Badge
+                  variant="outline"
+                  className="font-mono text-xs text-muted-foreground border-primary/20 bg-background/50"
+                >
                   {method.file}
                 </Badge>
                 <Button
@@ -128,7 +150,8 @@ const DetectionMethods = () => {
                   size="sm"
                   className="text-primary hover:text-primary hover:bg-primary/10 gap-1 rounded-full group/btn"
                 >
-                  Try Now <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-0.5 transition-transform" />
+                  Try Now{" "}
+                  <ArrowRight className="w-3 h-3 group-hover/btn:translate-x-0.5 transition-transform" />
                 </Button>
               </CardFooter>
             </Card>

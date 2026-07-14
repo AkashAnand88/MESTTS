@@ -1,6 +1,6 @@
 // src/lib/eyeTrackingMetrics.ts
 //
-// Direct port of Backend_Dyslexia_Detection/multimodel_pipeline/video_module.py.
+// Direct port of Backend_MESTTS_Detection/multimodel_pipeline/video_module.py.
 // IMPORTANT: this is NOT calibrated eye-tracking. The original Python module
 // itself uses a fixed heuristic constant (PX_PER_DEGREE = 18.0) to convert
 // iris pixel movement into a fake "deg/s" and "mm" — it does not use real
@@ -32,7 +32,9 @@ function dist(a: [number, number], b: [number, number]) {
 
 /** Same formula as video_module.py's calculate_ear() */
 export function calculateEAR(landmarks: Landmark[], indices: number[]): number {
-  const coords = indices.map((i) => [landmarks[i].x, landmarks[i].y] as [number, number]);
+  const coords = indices.map(
+    (i) => [landmarks[i].x, landmarks[i].y] as [number, number],
+  );
   const v1 = dist(coords[1], coords[5]);
   const v2 = dist(coords[2], coords[4]);
   const h = dist(coords[0], coords[3]);
@@ -40,7 +42,11 @@ export function calculateEAR(landmarks: Landmark[], indices: number[]): number {
 }
 
 /** Same formula as video_module.py's calculate_iris_diameter() */
-export function calculateIrisDiameter(landmarks: Landmark[], imgW: number, imgH: number): number {
+export function calculateIrisDiameter(
+  landmarks: Landmark[],
+  imgW: number,
+  imgH: number,
+): number {
   const [i1, i2] = IRIS_DIAMETER_POINTS;
   const p1: [number, number] = [landmarks[i1].x * imgW, landmarks[i1].y * imgH];
   const p2: [number, number] = [landmarks[i2].x * imgW, landmarks[i2].y * imgH];
@@ -61,7 +67,12 @@ export interface FrameResult {
 }
 
 /** Called once per video frame, mirrors video_module.py's process_frame() */
-export function processFrame(landmarks: Landmark[] | null, imgW: number, imgH: number, timestamp: number): FrameResult {
+export function processFrame(
+  landmarks: Landmark[] | null,
+  imgW: number,
+  imgH: number,
+  timestamp: number,
+): FrameResult {
   if (!landmarks) {
     return { gaze: null, ear: null, irisDiameterPx: null, faceDetected: false };
   }
@@ -111,7 +122,7 @@ export function computeAdvancedMetrics(
   blinkCount: number,
   pupilDiametersPx: number[],
   durationSec: number,
-  samplingRateHz: number
+  samplingRateHz: number,
 ): EyeTrackingFeatures {
   if (gazePoints.length < 2) {
     return {
@@ -136,7 +147,12 @@ export function computeAdvancedMetrics(
   for (let i = 1; i < gazePoints.length; i++) {
     const dt = gazePoints[i].t - gazePoints[i - 1].t;
     if (dt <= 0) continue; // same "valid = diff_time > 0" filter as Python
-    diffDist.push(dist([gazePoints[i].x, gazePoints[i].y], [gazePoints[i - 1].x, gazePoints[i - 1].y]));
+    diffDist.push(
+      dist(
+        [gazePoints[i].x, gazePoints[i].y],
+        [gazePoints[i - 1].x, gazePoints[i - 1].y],
+      ),
+    );
     diffTime.push(dt);
   }
 
@@ -158,15 +174,19 @@ export function computeAdvancedMetrics(
     };
   }
 
-  const velocitiesDegS = diffDist.map((d, i) => d / diffTime[i] / PX_PER_DEGREE);
+  const velocitiesDegS = diffDist.map(
+    (d, i) => d / diffTime[i] / PX_PER_DEGREE,
+  );
 
   const saccadeIdx = velocitiesDegS.reduce<number[]>((acc, v, i) => {
     if (v > SACCADE_THRESH_DEG_S) acc.push(i);
     return acc;
   }, []);
 
-  const avgSaccadeLen = saccadeIdx.length > 0 ? mean(saccadeIdx.map((i) => diffDist[i])) : 0;
-  const meanSaccadeVel = saccadeIdx.length > 0 ? mean(saccadeIdx.map((i) => velocitiesDegS[i])) : 0;
+  const avgSaccadeLen =
+    saccadeIdx.length > 0 ? mean(saccadeIdx.map((i) => diffDist[i])) : 0;
+  const meanSaccadeVel =
+    saccadeIdx.length > 0 ? mean(saccadeIdx.map((i) => velocitiesDegS[i])) : 0;
 
   // Fixation segmentation: consecutive sub-threshold samples accumulate duration
   const fixationEvents: number[] = [];
@@ -181,11 +201,15 @@ export function computeAdvancedMetrics(
   }
   if (currentDur > 0) fixationEvents.push(currentDur);
 
-  const avgFixDurMs = fixationEvents.length > 0 ? mean(fixationEvents) * 1000 : 0;
-  const firstPassDurMs = fixationEvents.length > 0 ? fixationEvents[0] * 1000 : 0;
+  const avgFixDurMs =
+    fixationEvents.length > 0 ? mean(fixationEvents) * 1000 : 0;
+  const firstPassDurMs =
+    fixationEvents.length > 0 ? fixationEvents[0] * 1000 : 0;
 
   const pupilDiameterMm =
-    pupilDiametersPx.length > 0 ? (mean(pupilDiametersPx) / PX_PER_DEGREE) * 4 : 0; // same odd conversion as Python
+    pupilDiametersPx.length > 0
+      ? (mean(pupilDiametersPx) / PX_PER_DEGREE) * 4
+      : 0; // same odd conversion as Python
 
   return {
     sampling_rate_hz: samplingRateHz,

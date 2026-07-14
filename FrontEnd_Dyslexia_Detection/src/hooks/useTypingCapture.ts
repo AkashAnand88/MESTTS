@@ -1,7 +1,7 @@
 // src/hooks/useTypingCapture.ts
 //
 // Replaces the "Typing Error Rate" slider with real keystroke capture.
-// Mirrors Backend_Dyslexia_Detection/multimodel_pipeline/typing_module.py
+// Mirrors Backend_MESTTS_Detection/multimodel_pipeline/typing_module.py
 // (TypingFeatureExtractor.on_press / on_release / analyze_errors) so the
 // computed fields match what the fusion model was trained against —
 // same mirror-letter map, same transposition test (equal-length, same
@@ -29,7 +29,14 @@ export interface TypingDynamics {
   totalKeystrokes: number;
 }
 
-const MIRRORS: Record<string, string> = { b: "d", d: "b", p: "q", q: "p", m: "w", w: "m" };
+const MIRRORS: Record<string, string> = {
+  b: "d",
+  d: "b",
+  p: "q",
+  q: "p",
+  m: "w",
+  w: "m",
+};
 
 function analyzeErrors(reference: string, typed: string) {
   const matcher = new SequenceMatcher(reference, typed);
@@ -101,23 +108,32 @@ export function useTypingCapture(referenceText: string) {
     backspaceCount.current = 0;
     totalKeystrokes.current = 0;
     startTime.current = null;
-    setDynamics({ avgHoldTimeMs: 0, avgFlightTimeMs: 0, typingSpeedCpm: 0, backspaceCount: 0, totalKeystrokes: 0 });
+    setDynamics({
+      avgHoldTimeMs: 0,
+      avgFlightTimeMs: 0,
+      typingSpeedCpm: 0,
+      backspaceCount: 0,
+      totalKeystrokes: 0,
+    });
   }, []);
 
-  const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const now = performance.now();
-    if (startTime.current === null) startTime.current = now;
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      const now = performance.now();
+      if (startTime.current === null) startTime.current = now;
 
-    const key = e.key;
-    keyDownTimes.current.set(key, now);
-    totalKeystrokes.current += 1;
-    if (key === "Backspace" || key === "Delete") backspaceCount.current += 1;
+      const key = e.key;
+      keyDownTimes.current.set(key, now);
+      totalKeystrokes.current += 1;
+      if (key === "Backspace" || key === "Delete") backspaceCount.current += 1;
 
-    if (lastReleaseTime.current !== null) {
-      const flight = now - lastReleaseTime.current;
-      if (flight < 2000) flightTimes.current.push(flight); // same 2s cap as typing_module.py
-    }
-  }, []);
+      if (lastReleaseTime.current !== null) {
+        const flight = now - lastReleaseTime.current;
+        if (flight < 2000) flightTimes.current.push(flight); // same 2s cap as typing_module.py
+      }
+    },
+    [],
+  );
 
   const onKeyUp = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const now = performance.now();
@@ -136,14 +152,18 @@ export function useTypingCapture(referenceText: string) {
   const finish = useCallback((): TypingData => {
     const avgHold =
       holdTimes.current.length > 0
-        ? holdTimes.current.reduce((a, b) => a + b, 0) / holdTimes.current.length
+        ? holdTimes.current.reduce((a, b) => a + b, 0) /
+          holdTimes.current.length
         : 0;
     const avgFlight =
       flightTimes.current.length > 0
-        ? flightTimes.current.reduce((a, b) => a + b, 0) / flightTimes.current.length
+        ? flightTimes.current.reduce((a, b) => a + b, 0) /
+          flightTimes.current.length
         : 0;
-    const totalFlightSec = flightTimes.current.reduce((a, b) => a + b, 0) / 1000;
-    const cpm = totalFlightSec > 0 ? (typedText.length / (totalFlightSec + 1)) * 60 : 0;
+    const totalFlightSec =
+      flightTimes.current.reduce((a, b) => a + b, 0) / 1000;
+    const cpm =
+      totalFlightSec > 0 ? (typedText.length / (totalFlightSec + 1)) * 60 : 0;
 
     setDynamics({
       avgHoldTimeMs: avgHold,
@@ -157,5 +177,14 @@ export function useTypingCapture(referenceText: string) {
     return analyzeErrors(referenceText, typedText);
   }, [referenceText, typedText]);
 
-  return { typedText, onChange, onKeyDown, onKeyUp, finish, reset, isComplete, dynamics };
+  return {
+    typedText,
+    onChange,
+    onKeyDown,
+    onKeyUp,
+    finish,
+    reset,
+    isComplete,
+    dynamics,
+  };
 }

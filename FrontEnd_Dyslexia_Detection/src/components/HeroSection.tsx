@@ -27,9 +27,12 @@ const HeroSection = ({ onBeginAssessment, isLoading }: HeroSectionProps) => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
           {/* Badge */}
-          <Badge variant="outline" className="mb-8 animate-fade-in py-1.5 px-4 bg-background/50 backdrop-blur-md border-primary/20 text-primary gap-2">
+          <Badge
+            variant="outline"
+            className="mb-8 animate-fade-in py-1.5 px-4 bg-background/50 backdrop-blur-md border-primary/20 text-primary gap-2"
+          >
             <Sparkles className="w-4 h-4" />
-            AI-Powered Dyslexia Screening
+            AI-Powered MESTTS Screening
           </Badge>
 
           {/* Heading */}
@@ -41,7 +44,7 @@ const HeroSection = ({ onBeginAssessment, isLoading }: HeroSectionProps) => {
           {/* Subheading */}
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in [animation-delay:200ms]">
             Advanced machine learning models analyze typing patterns, eye
-            movements, and audio to provide comprehensive dyslexia screening in
+            movements, and audio to provide comprehensive MESTTS screening in
             minutes.
           </p>
 
@@ -54,9 +57,13 @@ const HeroSection = ({ onBeginAssessment, isLoading }: HeroSectionProps) => {
               className="w-full sm:w-auto group rounded-full text-base h-14 px-8 shadow-glow"
             >
               {isLoading ? (
-                <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Running Assessment...</>
+                <>
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" /> Running
+                  Assessment...
+                </>
               ) : (
-                <>Begin Assessment
+                <>
+                  Begin Assessment
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </>
               )}
@@ -78,11 +85,16 @@ const HeroSection = ({ onBeginAssessment, isLoading }: HeroSectionProps) => {
               { value: "95%", label: "Accuracy Rate", icon: Sparkles },
               { value: "5min", label: "Assessment Time", icon: ArrowRight },
             ].map((stat, index) => (
-              <div key={index} className="flex flex-col items-center justify-center text-center space-y-2">
+              <div
+                key={index}
+                className="flex flex-col items-center justify-center text-center space-y-2"
+              >
                 <div className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight">
                   {stat.value}
                 </div>
-                <div className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{stat.label}</div>
+                <div className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>

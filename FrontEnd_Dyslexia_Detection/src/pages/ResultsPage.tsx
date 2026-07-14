@@ -1,13 +1,30 @@
 // src/pages/ResultsPage.tsx
 import { useLocation, useNavigate } from "react-router-dom";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Cell, LineChart, Line, CartesianGrid, Tooltip } from "recharts";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  Cell,
+  LineChart,
+  Line,
+  CartesianGrid,
+  Tooltip,
+} from "recharts";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
 import type { DesktopAssessmentResult } from "@/hooks/useDesktopLauncher";
 
 const DISCLAIMER =
-  "This system produces a behavioral risk indicator only. It does not constitute a clinical diagnosis of dyslexia or any other condition. Results must be interpreted by a qualified specialist.";
+  "This system produces a behavioral risk indicator only. It does not constitute a clinical diagnosis of MESTTS or any other condition. Results must be interpreted by a qualified specialist.";
 
 interface ResultsLocationState {
   result: DesktopAssessmentResult;
@@ -27,7 +44,9 @@ export default function ResultsPage() {
   if (!state?.result) {
     return (
       <div className="max-w-xl mx-auto mt-16 text-center space-y-4">
-        <p className="text-muted-foreground">No assessment result to show yet.</p>
+        <p className="text-muted-foreground">
+          No assessment result to show yet.
+        </p>
         <Button onClick={() => navigate("/")}>Run an assessment</Button>
       </div>
     );
@@ -49,7 +68,12 @@ export default function ResultsPage() {
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4 space-y-6">
-      <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="gap-2">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => navigate("/")}
+        className="gap-2"
+      >
         <ArrowLeft className="w-4 h-4" /> Back
       </Button>
 
@@ -62,8 +86,9 @@ export default function ResultsPage() {
             {result.risk_band}
           </p>
           <p className="text-sm text-muted-foreground">
-            Fusion score {(result.avg_fusion_score * 100).toFixed(1)}%
-            {" · "}{result.per_sentence.length} sentence{result.per_sentence.length !== 1 ? "s" : ""} scored
+            Fusion score {(result.avg_fusion_score * 100).toFixed(1)}%{" · "}
+            {result.per_sentence.length} sentence
+            {result.per_sentence.length !== 1 ? "s" : ""} scored
           </p>
         </CardContent>
       </Card>
@@ -71,17 +96,32 @@ export default function ResultsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Per-Modality Confidence</CardTitle>
-          <CardDescription>Average across all sentences in this session</CardDescription>
+          <CardDescription>
+            Average across all sentences in this session
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={confidenceChartData} layout="vertical" margin={{ left: 20 }}>
+              <BarChart
+                data={confidenceChartData}
+                layout="vertical"
+                margin={{ left: 20 }}
+              >
                 <XAxis type="number" domain={[0, 100]} unit="%" />
                 <YAxis type="category" dataKey="name" width={90} />
                 <Bar dataKey="value" radius={[0, 4, 4, 0]}>
                   {confidenceChartData.map((entry, i) => (
-                    <Cell key={i} fill={entry.value > 60 ? RISK_COLORS["HIGH RISK"] : entry.value > 30 ? RISK_COLORS["MEDIUM RISK"] : RISK_COLORS["LOW RISK"]} />
+                    <Cell
+                      key={i}
+                      fill={
+                        entry.value > 60
+                          ? RISK_COLORS["HIGH RISK"]
+                          : entry.value > 30
+                            ? RISK_COLORS["MEDIUM RISK"]
+                            : RISK_COLORS["LOW RISK"]
+                      }
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -94,7 +134,9 @@ export default function ResultsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Score by Sentence</CardTitle>
-            <CardDescription>Fusion score trend across the reading session</CardDescription>
+            <CardDescription>
+              Fusion score trend across the reading session
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-48">
@@ -104,16 +146,27 @@ export default function ResultsPage() {
                   <XAxis dataKey="name" />
                   <YAxis domain={[0, 100]} unit="%" />
                   <Tooltip />
-                  <Line type="monotone" dataKey="score" stroke={riskColor} strokeWidth={2} dot={{ r: 4 }} />
+                  <Line
+                    type="monotone"
+                    dataKey="score"
+                    stroke={riskColor}
+                    strokeWidth={2}
+                    dot={{ r: 4 }}
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
             <div className="mt-4 rounded-md border divide-y">
               {result.per_sentence.map((s) => (
-                <div key={s.sentence_index} className="flex justify-between px-3 py-1.5 text-sm">
+                <div
+                  key={s.sentence_index}
+                  className="flex justify-between px-3 py-1.5 text-sm"
+                >
                   <span>Sentence {s.sentence_index + 1}</span>
                   <span className="text-muted-foreground">{s.risk_label}</span>
-                  <span className="font-mono">{(s.final_score * 100).toFixed(1)}%</span>
+                  <span className="font-mono">
+                    {(s.final_score * 100).toFixed(1)}%
+                  </span>
                 </div>
               ))}
             </div>
@@ -126,7 +179,9 @@ export default function ResultsPage() {
         <p>{DISCLAIMER}</p>
       </div>
 
-      <Button className="w-full" onClick={() => navigate("/")}>Run Another Assessment</Button>
+      <Button className="w-full" onClick={() => navigate("/")}>
+        Run Another Assessment
+      </Button>
     </div>
   );
 }

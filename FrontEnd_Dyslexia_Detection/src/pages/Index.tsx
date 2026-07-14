@@ -6,8 +6,11 @@ import HowItWorks from "@/components/HowItWorks";
 import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 import DesktopLauncher from "@/components/DesktopLauncher";
-import { useDyslexiaAssessment } from "@/hooks/useDyslexiaAssessment";
-import { useDesktopLauncher, type DesktopAssessmentResult } from "@/hooks/useDesktopLauncher";
+import { useMESTTSAssessment } from "@/hooks/useMESTTSAssessment";
+import {
+  useDesktopLauncher,
+  type DesktopAssessmentResult,
+} from "@/hooks/useDesktopLauncher";
 
 // NOTE ON ARCHITECTURE (per project decision): the browser-based capture
 // built in Phases 1-3 (useTypingCapture / useEyeTracking / useAudioCapture /
@@ -24,7 +27,7 @@ import { useDesktopLauncher, type DesktopAssessmentResult } from "@/hooks/useDes
 
 const Index = () => {
   const navigate = useNavigate();
-  const { isApiOnline } = useDyslexiaAssessment();
+  const { isApiOnline } = useMESTTSAssessment();
   const launcher = useDesktopLauncher();
 
   const handleLaunch = (participantId: string) => {
@@ -40,16 +43,24 @@ const Index = () => {
   };
 
   const handleBeginAssessment = () => {
-    document.getElementById("assessment")?.scrollIntoView({ behavior: "smooth" });
+    document
+      .getElementById("assessment")
+      ?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <div className="min-h-screen bg-background selection:bg-primary/20">
       <Navbar />
-      <HeroSection onBeginAssessment={handleBeginAssessment} isLoading={launcher.status === "launching"} />
+      <HeroSection
+        onBeginAssessment={handleBeginAssessment}
+        isLoading={launcher.status === "launching"}
+      />
       <DetectionMethods />
       <HowItWorks />
-      <div id="assessment" className="bg-gradient-to-b from-background to-secondary/20 py-20">
+      <div
+        id="assessment"
+        className="bg-gradient-to-b from-background to-secondary/20 py-20"
+      >
         <DesktopLauncher
           status={launcher.status}
           errorMessage={launcher.errorMessage}

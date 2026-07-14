@@ -39,12 +39,14 @@ const HowItWorks = () => {
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <Badge variant="outline" className="mb-4">Process</Badge>
+          <Badge variant="outline" className="mb-4">
+            Process
+          </Badge>
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-foreground mb-4">
             How It Works
           </h2>
           <p className="text-lg text-muted-foreground">
-            A simple four-step process to get comprehensive dyslexia screening
+            A simple four-step process to get comprehensive MESTTS screening
             results in minutes.
           </p>
         </div>
@@ -56,7 +58,10 @@ const HowItWorks = () => {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
             {steps.map((item, index) => (
-              <div key={index} className="relative text-center group flex flex-col items-center">
+              <div
+                key={index}
+                className="relative text-center group flex flex-col items-center"
+              >
                 {/* Step Number Circle */}
                 <div className="relative inline-flex mb-6">
                   <div className="w-20 h-20 rounded-2xl bg-card shadow-sm flex items-center justify-center border border-border group-hover:border-primary group-hover:bg-primary/5 transition-all duration-300 transform group-hover:-translate-y-1">
@@ -93,11 +98,14 @@ const HowItWorks = () => {
                     Trained on Comprehensive Data
                   </h4>
                   <p className="text-muted-foreground text-lg leading-relaxed mb-4">
-                    All three ML models are trained using our diverse dataset containing thousands of samples with verified dyslexia indicators, ensuring high accuracy and reliability in detection.
+                    All three ML models are trained using our diverse dataset
+                    containing thousands of samples with verified MESTTS
+                    indicators, ensuring high accuracy and reliability in
+                    detection.
                   </p>
                   <div className="inline-flex items-center gap-2 text-sm font-mono bg-background/80 backdrop-blur border rounded-md px-3 py-1.5 text-muted-foreground">
-                     <FileText className="w-4 h-4 text-primary" />
-                     training_data.csv
+                    <FileText className="w-4 h-4 text-primary" />
+                    training_data.csv
                   </div>
                 </div>
               </div>

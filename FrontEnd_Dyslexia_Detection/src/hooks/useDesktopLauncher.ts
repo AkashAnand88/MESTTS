@@ -7,7 +7,7 @@
 // window — not in the browser.
 
 import { useCallback, useRef, useState } from "react";
-import { API_BASE } from "@/hooks/useDyslexiaAssessment";
+import { API_BASE } from "@/hooks/useMESTTSAssessment";
 
 export type LaunchStatus =
   | "idle"
@@ -53,34 +53,38 @@ export function useDesktopLauncher() {
     }
   }, []);
 
-  const fetchResult = useCallback(async (): Promise<DesktopAssessmentResult | null> => {
-    setStatus("fetching_result");
-    try {
-      const res = await fetch(`${API_BASE}/latest-result`);
-      if (res.status === 404) {
-        // The window closed but the user never clicked "Export" inside it
-        setStatus("waiting_for_export");
-        return null;
-      }
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
+  const fetchResult =
+    useCallback(async (): Promise<DesktopAssessmentResult | null> => {
+      setStatus("fetching_result");
+      try {
+        const res = await fetch(`${API_BASE}/latest-result`);
+        if (res.status === 404) {
+          // The window closed but the user never clicked "Export" inside it
+          setStatus("waiting_for_export");
+          return null;
+        }
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          setStatus("error");
+          setErrorMessage(body.detail || `Server error: ${res.status}`);
+          return null;
+        }
+        const data: DesktopAssessmentResult = await res.json();
+        setStatus("done");
+        return data;
+      } catch (err) {
+        console.error("Fetch result error:", err);
         setStatus("error");
-        setErrorMessage(body.detail || `Server error: ${res.status}`);
+        setErrorMessage("Couldn't reach the backend to fetch the result.");
         return null;
       }
-      const data: DesktopAssessmentResult = await res.json();
-      setStatus("done");
-      return data;
-    } catch (err) {
-      console.error("Fetch result error:", err);
-      setStatus("error");
-      setErrorMessage("Couldn't reach the backend to fetch the result.");
-      return null;
-    }
-  }, []);
+    }, []);
 
   const launch = useCallback(
-    (participantId: string, onClosed: (result: DesktopAssessmentResult | null) => void) => {
+    (
+      participantId: string,
+      onClosed: (result: DesktopAssessmentResult | null) => void,
+    ) => {
       setErrorMessage(null);
       setStatus("launching");
 
@@ -88,7 +92,7 @@ export function useDesktopLauncher() {
         try {
           const res = await fetch(
             `${API_BASE}/launch-assessment?participant_id=${encodeURIComponent(participantId)}`,
-            { method: "POST" }
+            { method: "POST" },
           );
           if (!res.ok) {
             const body = await res.json().catch(() => ({}));
@@ -99,7 +103,9 @@ export function useDesktopLauncher() {
         } catch (err) {
           console.error("Launch error:", err);
           setStatus("error");
-          setErrorMessage("Couldn't reach the backend to launch the assessment.");
+          setErrorMessage(
+            "Couldn't reach the backend to launch the assessment.",
+          );
           return;
         }
 
@@ -120,7 +126,7 @@ export function useDesktopLauncher() {
         }, POLL_INTERVAL_MS);
       })();
     },
-    [fetchResult, stopPolling]
+    [fetchResult, stopPolling],
   );
 
   const retryFetchResult = useCallback(
@@ -128,7 +134,7 @@ export function useDesktopLauncher() {
       const result = await fetchResult();
       onDone(result);
     },
-    [fetchResult]
+    [fetchResult],
   );
 
   const reset = useCallback(() => {
