@@ -192,6 +192,9 @@ speech:
 
 sentence_flow:
   practice_sentences: 2    # first 2 sentences are warm-up, excluded from scoring
+  flush_grace_s: 0.8       # max secs to wait for trailing ASR results on advance
+                            # (raise if you see low "Speech Coverage" in reports
+                            # despite a working mic — see Troubleshooting)
 ```
 
 All other defaults are fine to start with.
@@ -246,6 +249,9 @@ python3 scripts/run_session.py --participant P001 --config config/experiment_con
 3. The participant reads the sentence aloud (speech channel) and types it (typing channel)
 4. The eye tracker records fixations continuously
 5. Press **ENTER** or the USB pedal to advance to the next sentence
+   (the system briefly waits — up to `flush_grace_s`, default 0.8s — for
+   any in-flight speech recognition to catch up before locking in the
+   sentence, so fast readers don't lose trailing-word speech data)
 6. After all sentences, a risk score is computed and printed
 7. Session data is saved to `data/sessions.db` and exported to `data/exports/`
 
@@ -330,9 +336,24 @@ For best results, follow these constraints from the architecture spec:
 - Check that the mic is not muted in system settings
 
 ### Risk score shows INCONCLUSIVE
-- `data_completeness < 0.60` — more than 40% of word slots failed to complete
-- Usually caused by: camera dropout (fixation data missing), ASR not recognizing words, or participant completing sentences too quickly
-- Check `data/logs/` for the session log to identify which module was dropping data
+- Triggered when **either** the session-average `data_completeness < 0.60`,
+  **or** any single scored sentence falls below 0.60 — even if the
+  average across all sentences still looks fine (e.g. `1.0, 1.0, 0.5`
+  averages to `0.83`, but that `0.5` sentence still triggers it). This
+  is intentional: one poorly-captured sentence is excluded from feature
+  aggregation entirely rather than silently blended into the average.
+- Usually caused by: camera dropout (fixation data missing), ASR not
+  recognizing words, or the participant advancing (ENTER) before speech
+  recognition finished transcribing the sentence's last word(s) — check
+  the "Speech Coverage" chart in the PDF report per-sentence; a sentence
+  well below the others there is the usual culprit
+- If it's consistently the *last* word(s) of sentences specifically, try
+  raising `sentence_flow.flush_grace_s` (default `0.8`s) in
+  `experiment_config.yaml` to give slower ASR hardware more headroom
+- Check `data/logs/` for the session log — look for
+  `"Sentence closed before slot completed"` to confirm which words/
+  sentences were affected, and `"dropped N/M scored sentence(s) below
+  min_sentence_completeness"` to confirm which sentence(s) got excluded
 
 ### Tkinter display not found (Linux)
 ```bash
