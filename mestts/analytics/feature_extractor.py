@@ -113,10 +113,22 @@ class FeatureExtractor:
     ----------
     practice_count : int
         Number of practice sentences at the start of the session to skip.
+    min_sentence_completeness : float
+        Sentences with data_completeness below this are dropped from
+        aggregation entirely, rather than silently pulled into the mean
+        alongside fully-captured sentences. Prevents one poorly-captured
+        sentence (e.g. trailing words lost to ASR latency) from smuggling
+        outlier std/corr values into the session feature vector while
+        the *session-level* completeness average still looks fine.
     """
 
-    def __init__(self, practice_count: int = 0) -> None:
+    def __init__(
+        self,
+        practice_count: int = 0,
+        min_sentence_completeness: float = 0.60,
+    ) -> None:
         self._practice_count = practice_count
+        self._min_sentence_completeness = min_sentence_completeness
 
     def extract(self, sentence_metrics: List[SentenceMetrics]) -> FeatureVector:
         """
@@ -131,10 +143,26 @@ class FeatureExtractor:
         -------
         FeatureVector
         """
-        scored = [
+        eligible = [
             m for m in sentence_metrics
             if m.sentence_index >= self._practice_count
         ]
+
+        scored = [
+            m for m in eligible
+            if m.data_completeness >= self._min_sentence_completeness
+        ]
+
+        n_dropped = len(eligible) - len(scored)
+        if n_dropped:
+            logger.warning(
+                "FeatureExtractor: dropped %d/%d scored sentence(s) below "
+                "min_sentence_completeness=%.2f (indices=%s) — excluded from "
+                "feature aggregation to avoid outlier contamination.",
+                n_dropped, len(eligible), self._min_sentence_completeness,
+                [m.sentence_index for m in eligible
+                 if m.data_completeness < self._min_sentence_completeness],
+            )
 
         if not scored:
             logger.warning("FeatureExtractor: no scored sentences; returning empty vector.")
