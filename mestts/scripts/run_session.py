@@ -2187,6 +2187,22 @@ class SessionWindow(QWidget):
         }
 
         self.typing_hook.deactivate_sentence()
+
+        # Grace-wait: if the participant advanced quickly, trailing ASR
+        # results for the last word(s) may still be in flight. Poll briefly
+        # rather than flushing immediately, so we don't manufacture
+        # "uncaptured audio" purely from a race between typing/advance and
+        # the speech recognizer's latency. Bounded — never blocks the UI
+        # for more than cfg.flush_grace_s.
+        grace_deadline = time.monotonic() + self.cfg.flush_grace_s
+        poll_interval  = 0.05
+        while (self.synchronizer.pending_speech_count() > 0
+               and time.monotonic() < grace_deadline):
+            # Runs on the Qt main thread — pump the event loop instead of a
+            # blocking sleep so the UI doesn't freeze during the wait.
+            QApplication.processEvents()
+            time.sleep(poll_interval)
+
         slots = self.synchronizer.flush_sentence()
 
         # Re-admit gaze-only partial slots so fixation features are computed.
@@ -2232,8 +2248,13 @@ class SessionWindow(QWidget):
 
     def _close_session(self):
         end_ns    = self.clock.now_ns()
-        n_prac    = self.cfg.practice_sentences
-        extractor = FeatureExtractor(practice_count=n_prac)
+        n_prac       = self.cfg.practice_sentences
+        min_complete = self.cfg.risk_bands.get("min_data_completeness", 0.60)
+
+        extractor = FeatureExtractor(
+            practice_count=n_prac,
+            min_sentence_completeness=min_complete,
+        )
         fv        = extractor.extract(self.sentence_metrics_list)
 
         scorer    = RiskScorer(
@@ -2246,7 +2267,15 @@ class SessionWindow(QWidget):
             sum(m.data_completeness for m in scored) / len(scored)
             if scored else 0.0
         )
-        risk = scorer.score(fv, data_completeness=completeness)
+        # A fine session-wide average can still hide one badly-captured
+        # sentence (e.g. 1.0, 1.0, 0.5 averages to 0.83, well above the
+        # min threshold, even though that 0.5 sentence's speech data was
+        # mostly lost). Gate on the worst sentence too, not just the mean —
+        # the FeatureExtractor already excluded it from aggregation above,
+        # so this just makes sure the result is honestly labelled.
+        worst_complete = min((m.data_completeness for m in scored), default=1.0)
+        effective_completeness = min(completeness, worst_complete)
+        risk = scorer.score(fv, data_completeness=effective_completeness)
 
         self.sess_log.log_risk_score(risk, fv)
         self.sess_log.finalize_session(
