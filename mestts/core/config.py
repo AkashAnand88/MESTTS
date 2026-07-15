@@ -152,6 +152,16 @@ class ExperimentConfig:
     def sentence_timeout_s(self) -> float:
         return float(self._get("sentence_flow", "timeout_s", default=60.0))
 
+    @property
+    def flush_grace_s(self) -> float:
+        """
+        Max seconds to wait, on sentence advance, for in-flight ASR
+        results to land before flushing (and thereby excluding) any
+        remaining pending speech slots. Keeps fast typers/readers from
+        losing trailing-word speech data to the ASR pipeline's latency.
+        """
+        return float(self._get("sentence_flow", "flush_grace_s", default=0.8))
+
     # ── Scoring ───────────────────────────────────────────────────────────────
 
     @property
