@@ -95,6 +95,25 @@ class SynchronizerThread(threading.Thread):
             self._complete_fired  = False
         logger.debug("Synchronizer: activated for %d words.", len(words))
 
+    def pending_speech_count(self) -> int:
+        """
+        Number of active slots that have gaze/typing but are still
+        waiting on a speech_record from the ASR pipeline.
+
+        Callers (e.g. sentence-advance handlers) can poll this for a
+        short grace window before calling flush_sentence(), so trailing
+        ASR results aren't lost just because the participant advanced
+        quickly. Cheap, lock-protected snapshot — safe to poll.
+        """
+        with self._lock:
+            if not self._active:
+                return 0
+            return sum(
+                1 for s in self._slots
+                if s.speech_record is None
+                and (s.gaze_record is not None or s.typing_record is not None)
+            )
+
     def flush_sentence(self) -> List[WordSlot]:
         """
         Finalize and return all WordSlots.
